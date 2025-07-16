@@ -1,7 +1,59 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
 
-<h1>Generate Notice</h1>
+      <div class="card shadow p-4">
+        <h2 class="mb-4 text-center">Generate Legal Notices</h2>
 
+        <p class="text-muted text-center">
+          Upload your Excel file, select a template and company,<br> and click <strong>Generate</strong> to create personalized notices.
+        </p>
+
+        <form method="post" enctype="multipart/form-data" class="mt-4">
+          {% csrf_token %}
+
+          <!-- Upload Excel -->
+          <div class="mb-4">
+            <label for="id_excel_file" class="form-label fw-bold">Upload Excel Sheet</label>
+            <input class="form-control" type="file" name="excel_file" id="id_excel_file" required>
+            <div class="form-text">File must have: Name, Address, Email, Loan ID, Installments, Overdue Amount, Month Year, Costs</div>
+          </div>
+
+          <!-- Template dropdown -->
+          <div class="mb-4">
+            <label for="templateSelect" class="form-label fw-bold">Select Legal Notice Template</label>
+            <select class="form-select" name="template" id="templateSelect" required>
+              <option value="" selected disabled>-- Select Template --</option>
+              {% for template in templates %}
+                <option value="{{ template.id }}">{{ template.name }}</option>
+              {% empty %}
+                <option disabled>No templates found</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Company dropdown -->
+          <div class="mb-4">
+            <label for="companySelect" class="form-label fw-bold">Select Law Firm / Company</label>
+            <select class="form-select" name="company" id="companySelect" required>
+              <option value="" selected disabled>-- Select Company --</option>
+              {% for company in companies %}
+                <option value="{{ company.id }}">{{ company.name }}</option>
+              {% empty %}
+                <option disabled>No companies found</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary btn-lg w-100 custom-generate-btn">Generate Notices</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

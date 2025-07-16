@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<h1>Home Page</h1>
-
+  <div class="text-center py-5">
+    <h2>Welcome to Felidae!</h2>
+    <p>This is the home page for your Legal Notice Generation Portal.</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-primary mt-4">Go to Dashboard</a>
+  </div>
 {% endblock %}

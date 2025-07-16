@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Legal Notices</title>
+  <style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+      line-height: 1.6;
+      margin: 2cm;
+    }
+    .notice {
+      page-break-after: always;
+    }
+    .notice:last-child {
+      page-break-after: auto;
+    }
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  {% for notice in notices %}
+    <div class="notice">
+      <pre>{{ notice|safe }}</pre>
+    </div>
+  {% endfor %}
+</body>
+</html>

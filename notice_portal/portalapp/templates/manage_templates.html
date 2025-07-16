@@ -1,7 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
-<h1>Templates</h1>
-
+<div class="container py-4">
+  <h2 class="mb-4">Manage Templates</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for template in templates %}
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ template.name }}</h5>
+            <p class="card-text">{{ template.content|truncatechars:100 }}</p>
+            <a href="{% url 'template_detail' template.id %}" class="btn btn-primary">
+              View Template
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No templates found.</p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

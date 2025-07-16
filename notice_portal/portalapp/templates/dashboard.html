@@ -1,7 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container py-5">
+  <h1 class="mb-4">Dashboard</h1>
 
-<h1>Dashboard</h1>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total Companies</h5>
+          <p class="card-text display-4">{{ total_companies }}</p>
+        </div>
+      </div>
+    </div>
 
+    <div class="col-md-4">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total Templates</h5>
+          <p class="card-text display-4">{{ total_templates }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-white bg-danger mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Notices Generated</h5>
+          <p class="card-text display-4">{{ total_notices }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <a href="{% url 'manage_companies' %}" class="btn btn-lg w-100 btn-company">Manage Companies</a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <a href="{% url 'manage_templates' %}" class="btn btn-lg w-100 btn-template">Manage Templates</a>
+    </div>
+    <div class="col-md-4 mb-3">
+      <a href="{% url 'generate_notice' %}" class="btn btn-lg w-100 btn-notice">Generate Notices</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

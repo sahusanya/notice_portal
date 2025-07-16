@@ -1,0 +1,15 @@
+# Core Django
+Django==5.2.4
+
+# MySQL database driver
+mysqlclient==2.2.7
+
+# Excel file reading
+pandas==2.2.2
+openpyxl==3.1.2
+
+# PDF generation with wkhtmltopdf
+pdfkit==1.0.2
+
+# (Optional but recommended) for environment variables
+python-dotenv==1.0.1

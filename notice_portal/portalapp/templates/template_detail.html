@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4">{{ template.name }}</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <pre style="white-space: pre-wrap;">{{ template.content }}</pre>
+    </div>
+  </div>
+
+  <a href="{% url 'manage_templates' %}" class="btn btn-secondary mt-3">Back to Templates</a>
+</div>
+{% endblock %}

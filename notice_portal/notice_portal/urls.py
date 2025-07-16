@@ -25,4 +25,9 @@ urlpatterns = [
     path('upload/', views.generate_notice, name='generate_notice'),
     path('templates/', views.manage_templates, name='manage_templates'),
     path('companies/', views.manage_companies, name='manage_companies'),
+    path('companies/add/', views.add_company, name='add_company'),
+    path('companies/edit/<int:id>/', views.edit_company, name='edit_company'),
+    path('companies/delete/<int:id>/', views.delete_company, name='delete_company'),
+    path('template/<int:id>/', views.template_detail, name='template_detail'),
+
 ]
