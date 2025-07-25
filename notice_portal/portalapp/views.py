@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import EmailMessage
-from .models import Company,Template
+from django.conf import settings
+from .models import Company, Template
 from .forms import CompanyForm
 from django.http import HttpResponse
 import pandas as pd
@@ -10,74 +11,84 @@ import tempfile
 import pdfkit
 
 
-
-
-
 def generate_notice(request):
-    templates = Template.objects.all()
-    companies = Company.objects.all()
-
     if request.method == 'POST':
         excel_file = request.FILES.get('excel_file')
-        template_id = request.POST.get('template')
-        company_id = request.POST.get('company')
 
-        if not (excel_file and template_id and company_id):
-            return HttpResponse("Missing input", status=400)
-
-        template = Template.objects.get(pk=template_id)
-        company = Company.objects.get(pk=company_id)
+        if not excel_file:
+            return HttpResponse("Missing input: Please upload an Excel file.", status=400)
 
         df = pd.read_excel(excel_file)
 
         notices = []
 
-        for _, row in df.iterrows():
+        for index, row in df.iterrows():
+            company_name = row['Company'].strip()
+            template_type = row['Template Type'].strip()
+
+            try:
+                company = Company.objects.get(name__iexact=company_name)
+                template = Template.objects.get(company=company, template_type__iexact=template_type)
+            except Company.DoesNotExist:
+                return HttpResponse(f"Company '{company_name}' not found.", status=400)
+            except Template.DoesNotExist:
+                return HttpResponse(f"Template '{template_type}' not found for '{company_name}'.", status=400)
+
+            # Exact context keys
             context = {
-                'date': timezone.now().strftime('%d-%m-%Y'),
-                'name': row['Name'],
-                'address': row['Address'],
+                'customer_name': row['Name'],
+                'customer_address': row['Address'],
                 'email': row['Email'],
-                'loan_id': row['Loan ID'],
+                'loan_account': row['Loan Account'],
                 'installments': row['Installments'],
                 'overdue_amount': row['Overdue Amount'],
                 'month_year': row['Month Year'],
-                'costs': row.get('Costs', '0'),
+                'costs': row['Costs'],
                 'advocate_name': row['Advocate Name'],
-                'company_name': company.name,
-                'company_address': company.address,
-                'loan_amount': row['Loan Amount'],
                 'loan_date': row['Loan Date'],
                 'installment_amount': row['Installment Amount'],
+                'loan_amount': row['Loan Amount'],
                 'start_date': row['Start Date'],
+                'due_dates': row['Default Dates'],
                 'default_dates': row['Default Dates'],
-
+                'company_name': company.name,
+                'company_address': company.address,
+                'today_date': timezone.now().strftime('%d-%m-%Y'),
+                'due_date': timezone.now().strftime('%d-%m-%Y'),
             }
 
-            # Fill placeholders in notice content
-            notice_text = template.content.format(**context)
-            notices.append(notice_text)
+            print("====== DEBUG ROW ======")
+            print(f"Row {index+1}: Company={company_name} | Template={template_type}")
+            print("Context:", context)
 
-            # Fill placeholders in email content
-            email_body = template.email_content.format(**context)
+            # Format safely
+            try:
+                notice_text = template.body.format(**context)
+                email_body = template.email_body.format(**context)
+            except KeyError as e:
+                return HttpResponse(f"Template has undefined placeholder: {str(e)}", status=500)
 
-            # Send plain text email
+            notices.append({
+                'company_name': company.name,
+                'company_address': company.address,
+                'subject': template.subject.format(**context),
+                'body': notice_text
+            })
+
+            # Send email
             email = EmailMessage(
-                subject="Legal Notice for Loan Default – Immediate Action Required",
+                subject=template.subject.format(**context),
                 body=email_body,
-                from_email='your_email@example.com',  # Change to your email
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 to=[row['Email']],
             )
             email.send()
+            print(f"✅ Email sent to: {row['Email']}")
 
-        # Generate one combined PDF with all notices
-        html_string = render_to_string(
-            'notice_pdf.html',
-            {
-                'notices': notices,
-                'notices_count': len(notices),
-            }
-        )
+        # Generate PDF
+        html_string = render_to_string('notice_pdf.html', {
+            'notices': notices,
+        })
 
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             tmp_file.write(html_string.encode('utf-8'))
@@ -89,22 +100,17 @@ def generate_notice(request):
         response['Content-Disposition'] = 'attachment; filename="legal_notices.pdf"'
         return response
 
-    return render(request, 'generate_notice.html', {
-        'templates': templates,
-        'companies': companies,
-    })
-
+    return render(request, 'generate_notice.html')
 
 
 def home(request):
     return render(request, 'home.html')
 
 
-
 def dashboard(request):
     total_companies = Company.objects.count()
     total_templates = Template.objects.count()
-    total_notices = 123  # Replace with your real logic
+    total_notices = 123  # Replace with real logic if needed
     return render(request, 'dashboard.html', {
         'total_companies': total_companies,
         'total_templates': total_templates,
@@ -112,13 +118,8 @@ def dashboard(request):
     })
 
 
-
-
-#template management functions
-
 def manage_templates(request):
     templates = Template.objects.all()
-    print("Templates in DB:", templates)
     return render(request, 'manage_templates.html', {'templates': templates})
 
 
@@ -127,12 +128,8 @@ def template_detail(request, id):
     return render(request, 'template_detail.html', {'template': template})
 
 
-
-#company management functions
-
 def manage_companies(request):
     companies = Company.objects.all()
-    print("Companies in DB:", companies)
     return render(request, 'manage_companies.html', {'companies': companies})
 
 

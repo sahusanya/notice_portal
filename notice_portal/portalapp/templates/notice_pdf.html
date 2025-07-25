@@ -1,30 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Legal Notices</title>
-  <style>
-    body {
-      font-family: "Times New Roman", Times, serif;
-      line-height: 1.6;
-      margin: 2cm;
-    }
-    .notice {
-      page-break-after: always;
-    }
-    .notice:last-child {
-      page-break-after: auto;
-    }
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <title>Notices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            margin: 2cm;
+            color: #000;
+        }
+        .notice {
+            margin-bottom: 2cm;
+            page-break-after: always;
+        }
+        .notice:last-child {
+            page-break-after: auto;
+        }
+        h1, h2 {
+            margin: 0;
+            font-size: 16pt;
+        }
+        p {
+            margin: 5px 0;
+        }
+        .body {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-  {% for notice in notices %}
+    {% for notice in notices %}
     <div class="notice">
-      <pre>{{ notice|safe }}</pre>
+        <h1>{{ notice.company_name }}</h1>
+        <p>{{ notice.company_address }}</p>
+
+        <h2>{{ notice.subject }}</h2>
+
+        <div class="body">
+            {{ notice.body|linebreaks }}
+        </div>
     </div>
-  {% endfor %}
+    {% endfor %}
 </body>
 </html>
