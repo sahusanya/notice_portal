@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import EmailMessage
 from .models import Company,Template
 from .forms import CompanyForm
 from django.http import HttpResponse
@@ -7,6 +8,8 @@ from django.utils import timezone
 from django.template.loader import render_to_string
 import tempfile
 import pdfkit
+
+
 
 
 
@@ -25,11 +28,10 @@ def generate_notice(request):
         template = Template.objects.get(pk=template_id)
         company = Company.objects.get(pk=company_id)
 
-        # Read the Excel file
         df = pd.read_excel(excel_file)
 
-        # Generate all notices
         notices = []
+
         for _, row in df.iterrows():
             context = {
                 'date': timezone.now().strftime('%d-%m-%Y'),
@@ -41,14 +43,34 @@ def generate_notice(request):
                 'overdue_amount': row['Overdue Amount'],
                 'month_year': row['Month Year'],
                 'costs': row.get('Costs', '0'),
+                'advocate_name': row['Advocate Name'],
                 'company_name': company.name,
                 'company_address': company.address,
+                'loan_amount': row['Loan Amount'],
+                'loan_date': row['Loan Date'],
+                'installment_amount': row['Installment Amount'],
+                'start_date': row['Start Date'],
+                'default_dates': row['Default Dates'],
+
             }
-            # Fill in placeholders in template content
+
+            # Fill placeholders in notice content
             notice_text = template.content.format(**context)
             notices.append(notice_text)
 
-        #  Render the PDF HTML with all notices
+            # Fill placeholders in email content
+            email_body = template.email_content.format(**context)
+
+            # Send plain text email
+            email = EmailMessage(
+                subject="Legal Notice for Loan Default – Immediate Action Required",
+                body=email_body,
+                from_email='your_email@example.com',  # Change to your email
+                to=[row['Email']],
+            )
+            email.send()
+
+        # Generate one combined PDF with all notices
         html_string = render_to_string(
             'notice_pdf.html',
             {
@@ -57,25 +79,20 @@ def generate_notice(request):
             }
         )
 
-        #  Write HTML to a temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
             tmp_file.write(html_string.encode('utf-8'))
             tmp_file_path = tmp_file.name
 
-        #  Generate the PDF from the local HTML file
         pdf = pdfkit.from_file(tmp_file_path, False)
 
-        #  Return the PDF to download
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="legal_notices.pdf"'
         return response
 
-    # If GET: show the form to upload Excel and select options
     return render(request, 'generate_notice.html', {
         'templates': templates,
         'companies': companies,
     })
-
 
 
 

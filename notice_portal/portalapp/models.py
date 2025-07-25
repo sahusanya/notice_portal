@@ -12,6 +12,7 @@ class Company(models.Model):
 class Template(models.Model):
     name = models.CharField(max_length=200)
     content = models.TextField()
+    email_content = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
