@@ -9,8 +9,9 @@
       <div class="col">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">{{ template.name }}</h5>
-            <p class="card-text">{{ template.content|truncatechars:100 }}</p>
+            <h5 class="card-title">{{ template.company.name }} - {{ template.template_type|capfirst }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ template.subject }}</h6>
+            <p class="card-text">{{ template.body|truncatechars:100 }}</p>
             <a href="{% url 'template_detail' template.id %}" class="btn btn-primary">
               View Template
             </a>

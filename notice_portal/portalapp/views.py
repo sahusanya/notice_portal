@@ -55,6 +55,7 @@ def generate_notice(request):
                 'company_address': company.address,
                 'today_date': timezone.now().strftime('%d-%m-%Y'),
                 'due_date': timezone.now().strftime('%d-%m-%Y'),
+                'law_firm_Name': row['Law Firm Name'],
             }
 
             print("====== DEBUG ROW ======")
@@ -122,10 +123,14 @@ def manage_templates(request):
     templates = Template.objects.all()
     return render(request, 'manage_templates.html', {'templates': templates})
 
-
 def template_detail(request, id):
-    template = Template.objects.get(id=id)
-    return render(request, 'template_detail.html', {'template': template})
+    template = get_object_or_404(Template, id=id)
+    company = template.company
+    return render(request, 'template_detail.html', {
+        'template': template,
+        'company': company,
+        'email_body': template.email_body
+    })
 
 
 def manage_companies(request):
@@ -162,3 +167,6 @@ def delete_company(request, id):
         company.delete()
         return redirect('manage_companies')
     return render(request, 'delete_company.html', {'company': company})
+
+def reports(request):
+    return render(request, 'reports.html')

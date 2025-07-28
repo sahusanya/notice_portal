@@ -2,14 +2,33 @@
 
 {% block content %}
 <div class="container py-4">
-  <h2 class="mb-4">{{ template.name }}</h2>
+  <h2 class="mb-4">
+    {{ template.company.name }} – {{ template.template_type|capfirst }} Template
+  </h2>
 
-  <div class="card">
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Subject</div>
     <div class="card-body">
-      <pre style="white-space: pre-wrap;">{{ template.content }}</pre>
+      <p>{{ template.subject }}</p>
     </div>
   </div>
 
-  <a href="{% url 'manage_templates' %}" class="btn btn-secondary mt-3">Back to Templates</a>
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Notice Body</div>
+    <div class="card-body">
+      <pre style="white-space: pre-wrap;">{{ template.body }}</pre>
+    </div>
+  </div>
+
+  {% if template.email_body %}
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Email Body</div>
+    <div class="card-body">
+      <pre style="white-space: pre-wrap;">{{ template.email_body }}</pre>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'manage_templates' %}" class="btn btn-secondary">Back to Templates</a>
 </div>
 {% endblock %}
