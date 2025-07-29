@@ -1,47 +1,71 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container py-5">
-  <h1 class="mb-4">Dashboard</h1>
+<style>
+  /* Hover animation for cards */
+  .card-hover:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
 
-  <div class="row mb-4">
+  /* Hover animation for buttons */
+  .btn-hover:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+</style>
+
+<div class="container py-5">
+  <h1 class="mb-4 text-center">Dashboard</h1>
+
+  <!-- Stats Row -->
+  <div class="row g-4 mb-5 text-center">
+    <!-- Clients -->
     <div class="col-md-4">
-      <div class="card text-white bg-primary mb-3">
+      <div class="card h-100 text-white bg-primary shadow-sm card-hover">
         <div class="card-body">
           <h5 class="card-title">Total Clients</h5>
-          <p class="card-text display-4">{{ total_companies }}</p>
+          <p class="display-4">{{ total_companies }}</p>
         </div>
       </div>
     </div>
 
+    <!-- Templates -->
     <div class="col-md-4">
-      <div class="card text-white bg-success mb-3">
+      <div class="card h-100 text-white bg-success shadow-sm card-hover">
         <div class="card-body">
           <h5 class="card-title">Total Templates</h5>
-          <p class="card-text display-4">{{ total_templates }}</p>
+          <p class="display-4">{{ total_templates }}</p>
         </div>
       </div>
     </div>
 
+    <!-- Reports -->
     <div class="col-md-4">
-      <div class="card text-white bg-danger mb-3">
+      <div class="card h-100 text-white bg-danger shadow-sm card-hover">
         <div class="card-body">
           <h5 class="card-title">Reports</h5>
-          <p class="card-text display-4">{{ total_notices }}</p>
+          <p class="display-6">Total: {{ total_notices }}</p>
+          <hr class="bg-light">
+          <p class="mb-1">Successful Notices: <strong>{{ successful_notices }}</strong></p>
+          <p class="mb-1">Failed Notices: <strong>{{ failed_notices }}</strong></p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-4 mb-3">
-      <a href="{% url 'manage_companies' %}" class="btn btn-lg w-100 btn-company">Manage Clients</a>
+  <!-- Manage Buttons -->
+  <div class="row g-3">
+    <div class="col-md-4">
+      <a href="{% url 'manage_companies' %}" class="btn btn-outline-primary btn-lg w-100 btn-hover">Manage Clients</a>
     </div>
-    <div class="col-md-4 mb-3">
-      <a href="{% url 'manage_templates' %}" class="btn btn-lg w-100 btn-template">Manage Templates</a>
+    <div class="col-md-4">
+      <a href="{% url 'manage_templates' %}" class="btn btn-outline-success btn-lg w-100 btn-hover">Manage Templates</a>
     </div>
-    <div class="col-md-4 mb-3">
-      <a href="{% url 'reports' %}" class="btn btn-lg w-100 btn-notice">Manage Reports</a>
+    <div class="col-md-4">
+      <a href="{% url 'reports' %}" class="btn btn-outline-danger btn-lg w-100 btn-hover">Manage Reports</a>
     </div>
   </div>
 </div>

@@ -1,1 +1,82 @@
-<h2>reports</h2>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Notice Generation Report</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Successful Notices</h5>
+                    <p class="card-text display-6">{{ success_count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Failed Notices</h5>
+                    <p class="card-text display-6">{{ failure_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'download_failed_excel' %}" class="btn btn-outline-danger btn-lg">
+            Download Failed Records (Excel)
+        </a>
+    </div>
+
+    <hr class="my-5">
+
+    <h4 class="text-center mb-4">Successful Notices by Date</h4>
+
+    {% if grouped_notices %}
+        <div class="accordion" id="noticeAccordion">
+            {% for date, notices in grouped_notices.items %}
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}">
+                             {{ date }}
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#noticeAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Loan ID</th>
+                                        <th>Customer Name</th>
+                                        <th>PDF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in notices %}
+                                        <tr>
+                                            <td>{{ log.loan_account }}</td>
+                                            <td>{{ log.customer_name }}</td>
+                                            <td>
+                                                {% if log.pdf_file %}
+                                                    <a href="{{ log.pdf_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">View PDF</a>
+                                                {% else %}
+                                                    <span class="text-danger">Missing</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">No successful notices found.</p>
+    {% endif %}
+</div>
+{% endblock %}

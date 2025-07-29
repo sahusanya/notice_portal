@@ -17,18 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from portalapp import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('upload/', views.generate_notice, name='generate_notice'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('', views.dashboard, name='dashboard'),
+    path('generate/', views.generate_notice, name='generate_notice'),
     path('templates/', views.manage_templates, name='manage_templates'),
     path('companies/', views.manage_companies, name='manage_companies'),
     path('reports/', views.reports, name='reports'),
+    path('reports/download_failed/', views.download_failed_records_excel, name='download_failed_excel'),
     path('companies/add/', views.add_company, name='add_company'),
     path('companies/edit/<int:id>/', views.edit_company, name='edit_company'),
     path('companies/delete/<int:id>/', views.delete_company, name='delete_company'),
     path('template/<int:id>/', views.template_detail, name='template_detail'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

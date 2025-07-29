@@ -111,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -129,6 +129,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "notice_portal" / "static"
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -141,10 +144,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 #  Your Gmail address
-EMAIL_HOST_USER = 'syunsahu@gmail.com'
+EMAIL_HOST_USER = 'legal@canvaslegal.in'
 
 # The app password you just generated
-EMAIL_HOST_PASSWORD = 'kxlq ulxm kudh adox'
+EMAIL_HOST_PASSWORD = 'dftp aamx fkhu yzyd'
 
 #  (Optional) The default “from” address for outgoing emails
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
