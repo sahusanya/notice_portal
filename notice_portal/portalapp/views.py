@@ -192,8 +192,18 @@ def dashboard(request):
 
 
 def manage_templates(request):
-    templates = Template.objects.all()
-    return render(request, 'manage_templates.html', {'templates': templates})
+    templates = Template.objects.select_related('company').all()
+
+    grouped = defaultdict(list)
+    for template in templates:
+        grouped[template.company].append(template)
+
+    # Convert to list of tuples to make it template-friendly
+    grouped_templates = list(grouped.items())
+
+    return render(request, 'manage_templates.html', {
+        'grouped_templates': grouped_templates
+    })
 
 def template_detail(request, id):
     template = get_object_or_404(Template, id=id)
