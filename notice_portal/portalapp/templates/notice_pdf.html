@@ -1,35 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ subject }}</title>
-    <style>
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            margin: 50px;
-            line-height: 1.6;
-        }
+  <meta charset="UTF-8">
+  <title>{{ subject }}</title>
+  <style>
+    body {
+      font-family: "Georgia", serif;
+      font-size: 12pt;
+      color: #111;
+      margin: 50px 60px;
+      line-height: 1.6;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
 
-        p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
+    .notice-title {
+      font-size: 14pt;
+      text-align: center;
+      font-weight: bold;
+      margin: 40px 0 30px;
+      text-transform: uppercase;
+    }
 
-        .signature {
-            margin-top: 50px;
-        }
-    </style>
+    .notice-content {
+      text-align: justify;
+      white-space: pre-line;
+    }
+
+
+  </style>
 </head>
 <body>
 
-    <h2>{{ subject }}</h2>
+  {% if law_firm_name and law_firm_name != "" %}
+  <div style="text-align:center; border-bottom:2px solid black; margin-bottom:30px; padding-bottom:10px;">
+    <h1 style="font-size:24pt; margin:0; font-weight:bold;">{{ law_firm_name }}</h1>
+  </div>
+  {% endif %}
 
-    <p>{{ notice_text|linebreaks }}</p>
+
+  <div class="notice-title">
+    {{ subject }}
+  </div>
+
+  <div class="notice-content">
+    {{ notice_text|linebreaksbr }}
+  </div>
 
 </body>
 </html>

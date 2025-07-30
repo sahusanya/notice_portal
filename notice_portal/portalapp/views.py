@@ -20,6 +20,8 @@ from django.utils.timezone import localtime
 from datetime import date
 from django.contrib import messages
 
+def clean_cell(value):
+    return None if pd.isna(value) or str(value).strip().lower() == "nan" else str(value).strip()
 
 def generate_notice(request):
     if request.method == 'POST':
@@ -66,7 +68,7 @@ def generate_notice(request):
                     'company_address': company.address,
                     'today_date': timezone.now().strftime('%d-%m-%Y'),
                     'due_date': timezone.now().strftime('%d-%m-%Y'),
-                    'law_firm_Name': row['Law Firm Name'],
+                    'law_firm_name': clean_cell(row.get('Law Firm Name'))
                 }
 
                 # Generate formatted text
@@ -78,6 +80,7 @@ def generate_notice(request):
                 html = render_to_string('notice_pdf.html', {
                     'subject': subject,
                     'notice_text': notice_text,
+                    'law_firm_name': context['law_firm_name'],
                 })
 
                 # Define PDF output path
