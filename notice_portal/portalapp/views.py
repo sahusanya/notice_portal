@@ -68,7 +68,8 @@ def generate_notice(request):
                     'company_address': company.address,
                     'today_date': timezone.now().strftime('%d-%m-%Y'),
                     'due_date': timezone.now().strftime('%d-%m-%Y'),
-                    'law_firm_name': clean_cell(row.get('Law Firm Name'))
+                    'law_firm_name': clean_cell(row.get('Law Firm Name')),
+                    'law_firm_address': clean_cell(row.get('Law Firm Address'))
                 }
 
                 # Generate formatted text
@@ -81,6 +82,7 @@ def generate_notice(request):
                     'subject': subject,
                     'notice_text': notice_text,
                     'law_firm_name': context['law_firm_name'],
+                    'law_firm_address': context['law_firm_address'],
                 })
 
                 # Define PDF output path
