@@ -9,7 +9,7 @@ pandas==2.2.2
 openpyxl==3.1.2
 
 # PDF generation with wkhtmltopdf
-pdfkit==1.0.2
+pdfkit==1.0.0
 
 # (Optional but recommended) for environment variables
 python-dotenv==1.0.1

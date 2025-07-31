@@ -7,16 +7,12 @@ from django.http import HttpResponse
 import pandas as pd
 from django.utils import timezone
 from django.template.loader import render_to_string
-import tempfile
 import pdfkit
 import openpyxl
 from openpyxl.utils import get_column_letter
-from django.utils.encoding import smart_str
-from django.core.files.base import ContentFile
 import os
 from pathlib import Path
 from collections import defaultdict
-from django.utils.timezone import localtime
 from datetime import date
 from django.contrib import messages
 
@@ -70,6 +66,7 @@ def generate_notice(request):
                     'due_date': timezone.now().strftime('%d-%m-%Y'),
                     'law_firm_name': clean_cell(row.get('Law Firm Name')),
                     'law_firm_address': clean_cell(row.get('Law Firm Address'))
+
                 }
 
                 # Generate formatted text
@@ -82,7 +79,10 @@ def generate_notice(request):
                     'subject': subject,
                     'notice_text': notice_text,
                     'law_firm_name': context['law_firm_name'],
+<<<<<<< Updated upstream
                     'law_firm_address': context['law_firm_address'],
+=======
+>>>>>>> Stashed changes
                 })
 
                 # Define PDF output path

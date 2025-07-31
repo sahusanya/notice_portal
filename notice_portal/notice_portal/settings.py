@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,8 +27,8 @@ SECRET_KEY = 'django-insecure-e9hbe3v(kucf^o!1k4+yr=n17+*(^_)-60^_^s_^klo$($0kv%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['felidae.pythonanywhere.com']
 
 # Application definition
 
@@ -74,18 +75,18 @@ WSGI_APPLICATION = 'notice_portal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'notice_portal',
-        'USER': 'notice_user',
-        'PASSWORD': 'Stella@1234',
-        'HOST': 'localhost',
+        'NAME': 'Felidae$default',
+        'USER': 'Felidae',
+        'PASSWORD': 'Infosec@1234',
+        'HOST': 'Felidae.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -128,6 +129,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "notice_portal" / "static"
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
