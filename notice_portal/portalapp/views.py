@@ -79,10 +79,8 @@ def generate_notice(request):
                     'subject': subject,
                     'notice_text': notice_text,
                     'law_firm_name': context['law_firm_name'],
-<<<<<<< Updated upstream
                     'law_firm_address': context['law_firm_address'],
-=======
->>>>>>> Stashed changes
+
                 })
 
                 # Define PDF output path
